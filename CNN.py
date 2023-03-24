@@ -3,33 +3,51 @@ from keras.datasets import fashion_mnist
 # TensorFlow and tf.keras
 import tensorflow as tf
 from keras import datasets, layers, models
+# keras optimizers
+from keras.optimizers import SGD
+from keras.optimizers import Adam
 # Helper libraries
 import numpy as np
 import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
 
 print(tf.__version__)
 
 # load dataset
 fashion_mnist = tf.keras.datasets.fashion_mnist
-# 加载数据集会返回四个 NumPy 数组
+# return 4 numpy arrays
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
 class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
-# check dataset info
-train_images.shape # (60000, 28, 28)
-len(train_labels) # 60000
-train_labels # array([9, 0, 0, ..., 3, 0, 5], dtype=uint8)
-test_images.shape # 
 
-# pre-processing
+### create the validation dataset for validation purposes:
+### split the train dataset into train + validation dataset
+validate_train_ratio = 0.2
+# validation_images = np.split(train_images, )
+train_images, validate_images, train_labels, validate_labels = train_test_split(train_images,
+                                                                                train_labels,
+                                                                                test_size = validate_train_ratio,
+                                                                                random_state = 12345)
+# check dataset info
+print(train_images.shape) # (60000, 28, 28)
+print(len(train_labels)) # 60000
+print(train_labels) # array([9, 0, 0, ..., 3, 0, 5], dtype=uint8)
+print(validate_images.shape)
+print(len(validate_labels))
+print(test_images.shape) # (10000, 28, 28)
+
+
+# check 1st image: visualization
 plt.figure()
 plt.imshow(train_images[0])
 plt.colorbar()
 plt.grid(False)
 plt.show()
 
+# pre-processing
 # normalize images
 train_images = train_images / 255.0
 
@@ -60,7 +78,7 @@ model.add(layers.Conv2D(56, (3, 3), activation='relu'))
 # .summary() will print model structure and details
 model.summary()
 
-# add Dense Layer???
+# add Dense Layer
 model.add(layers.Flatten())
 model.add(layers.Dense(56, activation='relu'))
 model.add(layers.Dense(10))
@@ -68,6 +86,10 @@ model.add(layers.Dense(10))
 model.summary()
 
 # compile and train
+# opt = SGD(lr=0.01, momentum=0.9)
+# model.compile(optimizer=opt,
+#               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+#               metrics=['accuracy'])
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
