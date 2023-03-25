@@ -107,8 +107,8 @@ model.add(layers.Dense(10, activation='softmax'))
 # .summary() will print model structure and details
 model.summary()
 # plot the model
-plot_model(model, to_file='model.png')
-tf.keras.utils.plot_model(model, show_shapes = True, to_file='model.png')
+tf.keras.utils.plot_model(model, to_file='model.png')
+tf.keras.utils.plot_model(model, show_shapes = True, to_file='model1.png')
 
 
 # compile and train
@@ -148,41 +148,23 @@ history = model.fit(train_images,
 
 
 
-# # save model and weights
-# model_json = model.to_json()
-# with open("CNN1.json", "w") as json_file:
-#     json_file.write(model_json)
-# model.save_weights("weights.h5")
-# print("Model saved")
+# save model and weights
+model_json = model.to_json()
+with open("Baseline.json", "w") as json_file:
+    json_file.write(model_json)
+model.save_weights("Baseline_weights.h5")
+print("Model saved")
 
 
-# # load json and create model
-# json_file = open('CNN1.json', 'r')
-# loaded_model_json = json_file.read()
-# json_file.close()
-# loaded_model = model_from_json(loaded_model_json)
-# # load weights into new model
-# loaded_model.load_weights("weights.h5")
-# print("Loaded model from disk")
+# load json and create model
+json_file = open('Baseline.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+loaded_model = model_from_json(loaded_model_json)
+# load weights into new model
+loaded_model.load_weights("Baseline_weights.h5")
+print("Loaded model from disk")
 
-
-
-# # Assessment of model
-# plt.plot(history.history['accuracy'], label='train accuracy')
-# plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
-# plt.xlabel('Epoch')
-# plt.ylabel('Accuracy')
-# # plt.ylim([0.5, 1])
-# plt.legend(loc='lower right')
-# plt.show()
-# # plot loss and accuracy curve
-# plt.plot(history.history['loss'], label='train loss')
-# plt.plot(history.history['val_loss'], label = 'val_loss')
-# plt.xlabel('Epoch')
-# plt.ylabel('Loss')
-# # plt.ylim([0, 1])
-# plt.legend(loc='lower right')
-# plt.show()
 
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
