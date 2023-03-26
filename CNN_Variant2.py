@@ -142,12 +142,6 @@ history = model.fit(train_images,
                     validation_data=(validate_images, validate_labels),
                     callbacks=[reduce_lr])
 
-# model.compile(loss ='sparse_categorical_crossentropy', optimizer=Adam(lr=0.001),metrics =['accuracy'])
-# history = model.fit(train_images, train_labels, epochs=10, batch_size=4096, verbose=1,
-#                     validation_data=(validate_images, validate_labels))
-
-
-
 
 # save model and weights
 model_json = model.to_json()
