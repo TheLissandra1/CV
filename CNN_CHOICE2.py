@@ -124,7 +124,7 @@ import keras.backend as K
 from keras.callbacks import LearningRateScheduler
  
 def scheduler(epoch):
-    # For every 5 epochs，learning rate decreases to the 1/2 * previous learning rate
+    # For every 5 epoch, learning rate decreases to the 1/2 * previous learning rate
     if epoch % 5 == 0 and epoch != 0:
         lr = K.get_value(model.optimizer.lr)
         K.set_value(model.optimizer.lr, lr * 0.5)
