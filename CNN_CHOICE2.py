@@ -84,19 +84,18 @@ test_labels = to_categorical(test_labels, num_classes)
 # build model here
 # TODO: need further modification
 # Current: 8 layers: Input * 1 + Conv2D * 3 + Pooling * 2 + Dense * 2
-''' 
-Variant 3: padding = 'same'
-'''
+# Baseline:
 model = models.Sequential()
-model.add(layers.Conv2D(32, (3, 3), activation='relu', padding = 'same', kernel_initializer='he_normal', input_shape=(28, 28, 1)))
+model.add(layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', input_shape=(28, 28, 1)))
 model.add(layers.MaxPooling2D((2, 2)))
 # Add dropouts to the model
 model.add(layers.Dropout(0.25))
-model.add(layers.Conv2D(64, (3, 3),  padding = 'same',activation='relu'))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 # Add dropouts to the model
 model.add(layers.Dropout(0.25))
-model.add(layers.Conv2D(128, (3, 3), padding = 'same',activation='relu'))
+model.add(layers.Conv2D(128, (3, 3), activation='relu'))
+# Add dropouts to the model
 model.add(layers.Dropout(0.4))
 # add Dense Layer
 model.add(layers.Flatten())
@@ -107,9 +106,9 @@ model.add(layers.Dense(10, activation='softmax'))
 
 # .summary() will print model structure and details
 model.summary()
-# plot the model
-tf.keras.utils.plot_model(model, to_file='Variant3_model.png')
-tf.keras.utils.plot_model(model, show_shapes = True, to_file='Variant3_model1.png')
+# # plot the model
+# tf.keras.utils.plot_model(model, to_file='Choice2_model.png')
+# tf.keras.utils.plot_model(model, show_shapes = True, to_file='Choice2_model1.png')
 
 
 # compile and train
@@ -117,52 +116,48 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
+'''
+Create and apply a function to decrease the learning rate at a 1/2 of the value every 5 epochs: 10
+'''
 
-# opt = SGD(lr=0.01, momentum=0.9)
-# model.compile(optimizer=opt,
-#               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-#               metrics=['accuracy'])
+import keras.backend as K
+from keras.callbacks import LearningRateScheduler
+ 
+def scheduler(epoch):
+    # For every 5 epochs，learning rate decreases to the 1/2 * previous learning rate
+    if epoch % 5 == 0 and epoch != 0:
+        lr = K.get_value(model.optimizer.lr)
+        K.set_value(model.optimizer.lr, lr * 0.5)
+        print("lr changed to {}".format(lr * 0.5))
+    return K.get_value(model.optimizer.lr)
+ 
 
-
-# model.compile(optimizer='adam',
-#               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-#               metrics=['accuracy'])
-
-
-# Optimizer
-# optimizer = Adam(lr=0.001, beta_1=0.9, beta_2=0.999 )
-# model.compile(optimizer='adam', loss="categorical_crossentropy", metrics=["accuracy"])
-
-
+reduce_lr = tf.keras.callbacks.LearningRateScheduler(schedule=scheduler)
 
 history = model.fit(train_images, 
-                    train_labels,
-                    batch_size= 32, # default
+                    train_labels, 
                     epochs=15, 
+                    callbacks=[reduce_lr],
                     validation_data=(validate_images, validate_labels))
-
-# model.compile(loss ='sparse_categorical_crossentropy', optimizer=Adam(lr=0.001),metrics =['accuracy'])
-# history = model.fit(train_images, train_labels, epochs=10, batch_size=4096, verbose=1,
-#                     validation_data=(validate_images, validate_labels))
 
 
 
 
 # save model and weights
 model_json = model.to_json()
-with open("Variant3.json", "w") as json_file:
+with open("Choice2.json", "w") as json_file:
     json_file.write(model_json)
-model.save_weights("Variant3_weights.h5")
+model.save_weights("Choice2_weights.h5")
 print("Model saved")
 
 
 # load json and create model
-json_file = open('Variant3.json', 'r')
+json_file = open('Choice2_.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 # load weights into new model
-loaded_model.load_weights("Variant3_weights.h5")
+loaded_model.load_weights("Choice2__weights.h5")
 print("Loaded model from disk")
 
 
