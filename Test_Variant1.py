@@ -132,12 +132,12 @@ history = model.fit(train_images,
 
 
 
-# # save model and weights
-# model_json = model.to_json()
-# with open("Variant1.json", "w") as json_file:
-#     json_file.write(model_json)
-# model.save_weights("Variant1_weights.h5")
-# print("Model saved")
+# save model and weights
+model_json = model.to_json()
+with open("Test_Variant1.json", "w") as json_file:
+    json_file.write(model_json)
+model.save_weights("Test_Variant1_weights.h5")
+print("Model saved")
 
 
 # # load json and create model
@@ -167,19 +167,19 @@ loss = history.history['loss']
 val_loss = history.history['val_loss']
 epochs = range(len(accuracy))
 plt.plot(epochs, accuracy, label='Training Accuracy')
-plt.plot(epochs, val_accuracy, label='Validation Accuracy')
+plt.plot(epochs, val_accuracy, label='Test Accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 # plt.plot(epochs, accuracy, 'bo', label='Training Accuracy')
-# plt.plot(epochs, val_accuracy, 'b', label='Validation Accuracy')
-plt.title('Training and Validation accuracy')
+# plt.plot(epochs, val_accuracy, 'b', label='Test Accuracy')
+plt.title('Training and Test accuracy')
 plt.legend()
 plt.figure()
 plt.plot(epochs, loss, label='Training Loss')
-plt.plot(epochs, val_loss, label='Validation Loss')
+plt.plot(epochs, val_loss, label='Test Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
-plt.title('Training and validation loss')
+plt.title('Training and Test loss')
 plt.legend()
 plt.show()
 
