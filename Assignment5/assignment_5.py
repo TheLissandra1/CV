@@ -11,13 +11,13 @@ Original file is located at
 You can see the zip files if you click the Files tab (looks like a folder symbol on the left of the screen)
 """
 
-!wget http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip
-!wget http://vision.stanford.edu/Datasets/Stanford40_ImageSplits.zip
+# !wget http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip
+# !wget http://vision.stanford.edu/Datasets/Stanford40_ImageSplits.zip
 
-"""### Unzip it"""
+# """### Unzip it"""
 
-!unzip Stanford40_JPEGImages.zip -d Stanford40/
-!unzip Stanford40_ImageSplits.zip -d Stanford40/
+# !unzip Stanford40_JPEGImages.zip -d Stanford40/
+# !unzip Stanford40_ImageSplits.zip -d Stanford40/
 
 """## Read the train and test splits, combine them and make better splits to help training networks easier."""
 
@@ -54,31 +54,32 @@ print(f'Action categories ({len(action_categories)}):\n{action_categories}')
 """### Visualize a photo from the training files and also print its label"""
 
 import cv2
-from google.colab.patches import cv2_imshow
+# from google.colab.patches import cv2_imshow
 
 image_no = 234  # change this to a number between [0, 1200] and you can see a different training image
 img = cv2.imread(f'Stanford40/JPEGImages/{train_files[image_no]}')
 print(f'An image with the label - {train_labels[image_no]}')
-cv2_imshow(img)
+# cv2_imshow(img)
+
 
 """# Human Motion Database 51 (HMDB51)
 ### Download the dataset
 """
 
-!pip install av
-! wget https://raw.githubusercontent.com/pytorch/vision/6de158c473b83cf43344a0651d7c01128c7850e6/references/video_classification/transforms.py
-# Download HMDB51 data and splits from serre lab website
-! wget http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/hmdb51_org.rar
-! wget http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/test_train_splits.rar
+# !pip install av
+# ! wget https://raw.githubusercontent.com/pytorch/vision/6de158c473b83cf43344a0651d7c01128c7850e6/references/video_classification/transforms.py
+# # Download HMDB51 data and splits from serre lab website
+# ! wget http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/hmdb51_org.rar
+# ! wget http://serre-lab.clps.brown.edu/wp-content/uploads/2013/10/test_train_splits.rar
 
 """# Extract and organize the data."""
 
-! mkdir -p video_data test_train_splits
-! unrar e test_train_splits.rar test_train_splits
-! rm test_train_splits.rar
-! unrar e hmdb51_org.rar 
-! rm hmdb51_org.rar
-! mv *.rar video_data
+# ! mkdir -p video_data test_train_splits
+# ! unrar e test_train_splits.rar test_train_splits
+# ! rm test_train_splits.rar
+# ! unrar e hmdb51_org.rar 
+# ! rm hmdb51_org.rar
+# ! mv *.rar video_data
 import os
 keep_hmdb51 = ["clap", "climb", "drink", "jump", "pour", "ride_bike", "ride_horse", 
         "run", "shoot_bow", "smoke", "throw", "wave"]
@@ -89,7 +90,7 @@ for files in os.listdir('video_data'):
       os.system("mkdir -p video_data/" + foldername)
       os.system("unrar e video_data/"+ files + " video_data/"+foldername)
 
-! rm video_data/*.rar
+# ! rm video_data/*.rar
 
 """# Load data into dataloaders with necessary transforms"""
 
@@ -99,7 +100,7 @@ import torchvision.transforms as transforms
 import torch.optim as optim
 from torch.utils.data import random_split, DataLoader
 import torch
-import transforms as T
+import torchvision.transforms as T
 
 torch.manual_seed(97)
 num_frames = 16
